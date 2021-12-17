@@ -12,36 +12,42 @@ import { APIInfo } from '../api-info';
 export class HomeComponent implements OnInit {
   results: Array<any> = [];
   users: User[] = [];
-  selectedUser:string = '';
-  showInfo:boolean = false;
-  triviaInfo:APIInfo;
+  selectedUser: string = '';
+  showInfo: boolean = false;
+  triviaInfo: APIInfo;
 
   @Output() gameOutput = new EventEmitter();
 
-  constructor(private triviaService: TriviaService, private userService:UserService) { 
-    this.triviaInfo = {difficulty: '', category: '', choiceType: ''}
+  constructor(private triviaService: TriviaService, private userService: UserService) {
+    this.triviaInfo = { difficulty: '', category: '', choiceType: '' }
   }
 
   ngOnInit(): void {
     //Just gonna test to see if we actually get results here:
     this.getUsers();
+    console.log(`Selected user: ${this.selectedUser}`)
   }
 
-  getUsers(){
+  getUsers() {
     this.users = this.userService.getUsers();
     console.log(this.users)
   }
 
-  generateUser(name:string){
+  generateUser(name: string) {
     this.userService.generateUser(name);
 
     this.getUsers();
   }
 
-  startGame(){
-    let gameInfo = {name: this.selectedUser, info: this.triviaInfo}
+  startGame() {
+    if (this.selectedUser === '') {
+      alert("Pick a user before you continue!")
+    }
+    else {
+      let gameInfo = { name: this.selectedUser, info: this.triviaInfo }
 
-    this.gameOutput.emit(gameInfo)
+      this.gameOutput.emit(gameInfo)
+    }
   }
 
 }

@@ -12,6 +12,21 @@ export class UserService {
     return JSON.parse(localStorage.getItem("users") || "[]");
   }
 
+  getUser(name: string): User {
+    let allUsers = this.getUsers();
+    return allUsers.find(item => item.name === name)!;
+  }
+
+  getNames() {
+    let allUsers = this.getUsers();
+    let userNames = [];
+    for (let user of allUsers) {
+      userNames.push(user.name);
+    }
+
+    return userNames;
+  }
+
   generateUser(name: string) {
     let allUsers = this.getUsers();
     let newUser = {
@@ -28,38 +43,47 @@ export class UserService {
     //First we grab all users and the specific user that got a new score
     let allUsers = this.getUsers();
     let activeUser = allUsers.find(item => item.name === name)!
-    let activeIndex = allUsers.findIndex(item => item.name);
+    let activeIndex = allUsers.findIndex(item => item.name === name);
+    console.log(activeIndex);
+    console.log(activeUser);
 
     //Then we do a buuuunch of score calculation
     if (score > activeUser.stats.highestScore)
       activeUser.stats.highestScore = score;
 
-    if (score > 7) {
+    if (score === 10) {
       switch (difficulty) {
         case 'easy':
           activeUser.score.easyWin += 1;
+          activeUser.score.perfectWin += 1;
           break;
         case 'medium':
           activeUser.score.medWin += 1;
+          activeUser.score.perfectWin += 1;
           break;
         case 'hard':
           activeUser.score.hardWin += 1;
+          activeUser.score.perfectWin += 1;
+          break;
+        default:
+          activeUser.score.easyWin += 1;
+          activeUser.score.perfectWin += 1;
           break;
       }
     }
-    else if (score === 10) {
+    else if (score > 7) {
       switch (difficulty) {
         case 'easy':
           activeUser.score.easyWin += 1;
-          activeUser.score.perfectWin += 1;
           break;
         case 'medium':
           activeUser.score.medWin += 1;
-          activeUser.score.perfectWin += 1;
           break;
         case 'hard':
           activeUser.score.hardWin += 1;
-          activeUser.score.perfectWin += 1;
+          break;
+        default:
+          activeUser.score.easyWin += 1;
           break;
       }
     }
@@ -74,6 +98,8 @@ export class UserService {
         case 'hard':
           activeUser.score.hardLoss += 1;
           break;
+        default:
+          activeUser.score.easyLoss += 1;
       }
     }
 
@@ -84,18 +110,34 @@ export class UserService {
   }
 
   calculateWins(name: string) {
-    let allUsers = this.getUsers();
-    let user = allUsers.find(item => { return item.name === name })!
+    let user = this.getUser(name)
     return (user.score.easyWin + user.score.medWin + user.score.hardWin)
   }
 
   calculateLoss(name: string) {
-    let allUsers = this.getUsers();
-    let user = allUsers.find(item => { return item.name === name })!
+    let user = this.getUser(name)
     return (user.score.easyLoss + user.score.medLoss + user.score.hardLoss)
   }
 
-  clearDatabase(){
+  returnScore(name: string, difficulty: string): [number, number] {
+    let user = this.getUser(name);
+    if (difficulty === 'easy') {
+      return [user.score.easyWin, user.score.easyLoss]
+    }
+    else if (difficulty === 'medium') {
+      return [user.score.medWin, user.score.medLoss]
+    }
+    else if (difficulty === 'hard') {
+      return [user.score.hardWin, user.score.hardLoss]
+    }
+    else if (difficulty === 'perfect') {
+      console.log(user.score.perfectWin);
+      return [user.score.perfectWin, 0]
+    }
+    return [0, 0]
+  }
+
+  clearDatabase() {
     localStorage.clear();
   }
 }

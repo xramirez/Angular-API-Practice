@@ -41,12 +41,13 @@ export class GameComponent implements OnInit {
     //then we'll fill it with answers at the index of the question
     this.answers = [];
     this.answers.push({ answer: this.results[this.activeQuestion].correct_answer, isCorrect: true })
+    console.log(this.results[this.activeQuestion].correct_answer)
     for (let answer of this.results[this.activeQuestion].incorrect_answers)
       this.answers.push({ answer: answer, isCorrect: false });
     console.log(this.answers)
 
     //the second portion of this function is to jumble up the answers. The min is 4, the max is 2
-    if (this.gameInfo.choiceType === 'multiple') {
+    if (this.answers.length > 2) {
       let currentIndex = this.answers.length, randomIndex = 0;
       while (currentIndex != 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -55,7 +56,7 @@ export class GameComponent implements OnInit {
         [this.answers[currentIndex], this.answers[randomIndex]] = [this.answers[randomIndex], this.answers[currentIndex]];
       }
     }
-    else if(this.gameInfo.choiceType === 'boolean')
+    else if(this.answers.length === 2)
     {
       let trueAnswer = this.answers.find(item => item.answer === 'True')!;
       let falseAnswer = this.answers.find(item => item.answer === 'False')!;

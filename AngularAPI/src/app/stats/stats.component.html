@@ -1,2 +1,7 @@
 <h1>You got a score of {{finalInfo.score}} out of 10!</h1>
 <h2>Here are your stats, {{finalInfo.name}}:</h2>
+<plotly-plot [data]="gameData" [layout]="gameLayout"></plotly-plot>
+<plotly-plot [data]="allScoresData" [layout]="allScoresLayout"></plotly-plot>
+<plotly-plot [data]="allPlayerData" [layout]="allPlayerLayout"></plotly-plot>
+
+

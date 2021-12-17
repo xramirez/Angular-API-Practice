@@ -1,35 +1,42 @@
-<div class="main-body">
-    <div>
-        <h2 *ngIf="selectedUser">Welcome, {{selectedUser}}</h2>
+<div class="main-body row justify-content-center align-items-center">
+    <div class="active-user">
+        <h1 [style.visibility] = "selectedUser ? 'visible' : 'hidden'">Welcome, {{selectedUser}}</h1>
         <label for="select-user">Select User:</label>
-        <select name="select-user" id="select-user" [(ngModel)]="selectedUser">
+        <select name="select-user" id="select-user" [(ngModel)]="selectedUser" class="form-control">
             <option></option>
             <option *ngFor="let user of users" value="{{user.name}}">{{user.name}}</option>
         </select>
     </div>
-    <div>
+    <div class="newUser">
         <label for="new-user">New User? Enter Your Name Here!</label>
         <input type="text" id="new-user" #newUser>
-        <button class="add-button btn btn-primary" (click)="generateUser(newUser.value); newUser.value=''">Generate
-            User</button>
+        <div class="generate-button">
+            <button class="add-button btn btn-primary" (click)="generateUser(newUser.value); newUser.value=''">Generate
+                User</button>
+        </div>
     </div>
-    <div>
-        <h2>Pick Your Game Settings:</h2>
-        <select name="difficulty" id="difficulty" [(ngModel)] = "triviaInfo.difficulty">
+    <div class="settings form-group">
+        <h3 id="setting-title">Pick Your Game Settings: (leave empty for a completely random trivia game!)</h3>
+        <label for="Difficulty" class="form-label">Game Difficulty:</label>
+        <select name="difficulty" id="difficulty" [(ngModel)]="triviaInfo.difficulty" class="form-control">
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
         </select>
-        <select name="category" id="category" [(ngModel)] = "triviaInfo.category">
+        <label for="category" class="form-label">Trivia Category:</label>
+        <select name="category" id="category" [(ngModel)]="triviaInfo.category" class="form-control">
             <option value="11">Film</option>
             <option value="12">Music</option>
             <option value="14">Television</option>
             <option value="15">Video Games</option>
         </select>
-        <select name="choice" id="choice" [(ngModel)] = "triviaInfo.choiceType">
+        <label for="choice" class="form-label">Multiple Choice or True/False:</label>
+        <select name="choice" id="choice" [(ngModel)]="triviaInfo.choiceType" class="form-control">
             <option value="multiple">Multiple Choice</option>
             <option value="boolean">True/False</option>
         </select>
     </div>
-    <button (click)="startGame()">Start Game</button>
+    <div>
+        <button (click)="startGame()" class="btn btn-secondary">Start Game</button>
+    </div>
 </div>

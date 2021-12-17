@@ -40,16 +40,22 @@ export class HandlerComponent implements OnInit {
   }
 
   endGame(finalScore:number){
+    console.log(this.apiInfo)
+    console.log(this.finalScore);
     this.finalInfo = {name: this.activeUser, score: finalScore}
-    console.log(`${this.activeUser} got a score of ${finalScore}`)
     this.userService.addScore(this.activeUser, finalScore, this.apiInfo.difficulty)
 
-    console.log(`${this.userService.calculateWins(this.activeUser)} wins, ${this.userService.calculateLoss(this.activeUser)} losses`)
     this.game = false;
     this.gameStats = true;
   }
 
   clear(){
     this.userService.clearDatabase()
+  }
+
+  restartGame(){
+    this.game = false;
+    this.gameStats = false;
+    this.setup = true;
   }
 }
