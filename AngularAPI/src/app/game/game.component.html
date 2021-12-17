@@ -1,0 +1,11 @@
+<div class="main-body" *ngIf="results.length > 0">
+    <h1>Question {{activeQuestion + 1}} of 10</h1>
+    <p [innerHTML]="results[activeQuestion].question"></p>
+    <form class="question-answer">
+        <div class="choice" *ngFor="let choice of answers; let i = index">
+            <input type="radio" name="choice" [id]="'choice' + i" [value]="choice" [(ngModel)]="selected">
+            <label [for]="'choice' + i" [innerHTML]="choice.answer"></label>
+        </div>
+        <button type="button" (click)="nextQuestion()">Submit</button>
+    </form>
+</div>

@@ -1,1 +1,35 @@
-
+<div class="main-body">
+    <div>
+        <h2 *ngIf="selectedUser">Welcome, {{selectedUser}}</h2>
+        <label for="select-user">Select User:</label>
+        <select name="select-user" id="select-user" [(ngModel)]="selectedUser">
+            <option></option>
+            <option *ngFor="let user of users" value="{{user.name}}">{{user.name}}</option>
+        </select>
+    </div>
+    <div>
+        <label for="new-user">New User? Enter Your Name Here!</label>
+        <input type="text" id="new-user" #newUser>
+        <button class="add-button btn btn-primary" (click)="generateUser(newUser.value); newUser.value=''">Generate
+            User</button>
+    </div>
+    <div>
+        <h2>Pick Your Game Settings:</h2>
+        <select name="difficulty" id="difficulty" [(ngModel)] = "triviaInfo.difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <select name="category" id="category" [(ngModel)] = "triviaInfo.category">
+            <option value="11">Film</option>
+            <option value="12">Music</option>
+            <option value="14">Television</option>
+            <option value="15">Video Games</option>
+        </select>
+        <select name="choice" id="choice" [(ngModel)] = "triviaInfo.choiceType">
+            <option value="multiple">Multiple Choice</option>
+            <option value="boolean">True/False</option>
+        </select>
+    </div>
+    <button (click)="startGame()">Start Game</button>
+</div>
