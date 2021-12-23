@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../user.service';
+import { User } from 'src/User';
 
 @Component({
   selector: 'stats',
@@ -7,63 +8,61 @@ import { UserService } from '../user.service';
   styleUrls: ['./stats.component.scss']
 })
 export class StatsComponent implements OnInit {
-
-  @Input() finalInfo: { name: string, score: number }
+  justStats:boolean = true;
+  users:User[] = [];
+  sortedUsers:User[] = [];
+  @Input() finalInfo: { endGame:boolean, guest:boolean, id: string, score: number }
   //Lots of plot data objects are going to be declared here. It's currently the only way I see this playing out?
   gameData: object[] = []
   gameLayout: object = {}
 
-  allScoresData: object[] = [];
-  allScoresLayout: object = {};
+  genreData: object[] = [];
+  genreLayout: object = {};
 
-  allPlayerData: object[] = [];
-  allPlayerLayout: object = {};
+  leaderboardData: object[] = [];
+  leaderboardLayout: object = {};
 
   constructor(private userService: UserService) {
-    this.finalInfo = { name: '', score: 0 }
+    this.finalInfo = { endGame: false, guest: true, id: 'Guest', score: 0 }
   }
 
-  ngOnInit(): void {
-    this.gamePlot();
-    this.difficultyPlot();
-    this.playersPlot();
+  ngOnInit():void {
+    if(this.finalInfo.endGame === true){
+      this.justStats = false;
+    }
+    this.plot(this.finalInfo.guest)
   }
 
-  gamePlot() {
-    console.log(this.finalInfo);
-    this.gameData = [
-      {
-        ids: ['Wins', 'Losses'],
-        values: [this.userService.calculateWins(this.finalInfo.name), this.userService.calculateLoss(this.finalInfo.name)],
-        labels: ['Wins', 'Losses'], textinfo: 'value', insidetextfont: { size: 35 }, type: 'pie',
-        marker: {
-          colors: ['#f9564f', '#7b1e7a']
+  plot(guest:boolean) {
+    this.userService.getUsers()
+      .then(data => {
+        this.users = data
+        if(guest === false)
+        {
+          let user = this.users.find(item => item.id === this.finalInfo.id)!
+          this.gamePlot(user);
+          this.genrePlot(user);
         }
-      }
-    ]
-    this.gameLayout = { width: 500, height: 400, title: 'Total Wins/Losses', paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)' }
+        this.leaderboard('win')
+      })
   }
 
-  difficultyPlot() {
-    let easy = this.userService.returnScore(this.finalInfo.name, 'easy')
-    let med = this.userService.returnScore(this.finalInfo.name, 'medium')
-    let hard = this.userService.returnScore(this.finalInfo.name, 'hard')
-    let perfect = this.userService.returnScore(this.finalInfo.name, 'perfect')
+  gamePlot(user:User) {
     let winBar = {
       x: ['Easy', 'Medium', 'Hard'],
-      y: [easy[0], med[0], hard[0]],
+      y: [user.score.easyWin, user.score.medWin, user.score.hardWin],
       name: 'Wins',
       type: 'bar',
     }
     let lossBar = {
       x: ['Easy', 'Medium', 'Hard'],
-      y: [easy[1], med[1], hard[1]],
+      y: [user.score.easyLoss, user.score.medLoss, user.score.hardLoss],
       name: 'Losses',
       type: 'bar',
     }
     let perfectBar = {
       x: ['Perfect Wins'],
-      y: [perfect[0]],
+      y: [user.score.perfectWin],
       name: 'Perfect Wins',
       type: 'bar',
       marker: {
@@ -71,37 +70,36 @@ export class StatsComponent implements OnInit {
       }
     }
 
-    this.allScoresData = [winBar, lossBar, perfectBar];
-    this.allScoresLayout = { width: 600, height: 400, title: 'Wins/Losses By Difficulty', paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)' }
+    this.gameData = [winBar, lossBar, perfectBar];
+    this.gameLayout = { width: 600, height: 400, title: 'Wins/Losses By Difficulty', paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)' }
   }
 
-  playersPlot() {
-    let userNames = this.userService.getNames();
-    let userScores: number[] = [];
-
-    userNames.splice(userNames.findIndex(name => name === this.finalInfo.name), 1)
-    userNames.forEach(name => userScores.push(this.userService.calculateWins(name)));
-
-    let activeUser = this.userService.getUser(this.finalInfo.name).name
-
-    let activeBar = {
-      x: [activeUser],
-      y: [this.userService.calculateWins(activeUser)],
-      name: 'Your Score',
-      type: 'bar',
-      marker: {
-        color : ['#b33f62']
+  genrePlot(user:User)
+  {
+    this.genreData = [
+      {
+        ids: ['Film', 'Music', 'TV', 'Gaming'],
+        values: this.userService.genreWins(user),
+        labels: ['Film', 'Music', 'TV', 'Gaming'], textinfo: 'value', insidetextfont: { size: 35 }, type: 'pie',
       }
-    }
+    ]
+    this.genreLayout = { width: 500, height: 400, title: 'Top Genre Wins', paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)' }
+  }
 
-    let userBars = {
-      x: userNames,
-      y: userScores,
-      name: "Other's Scores",
-      type: 'bar'
+  leaderboard(sort:string){
+    this.sortedUsers = this.users;
+    if(sort === 'win')
+    {
+      this.sortedUsers = this.sortedUsers.sort((a,b) => this.userService.calculateWins(b) - this.userService.calculateWins(a))
     }
+    else if(sort === 'perfect')
+    {
+      this.sortedUsers = this.sortedUsers.sort((a,b) => b.score.perfectWin - a.score.perfectWin)
+    }
+    //console.log(this.sortedUsers)
+  }
 
-    this.allPlayerData = [activeBar, userBars];
-    this.allPlayerLayout = { width: 600, height: 400, title: `${this.finalInfo.name}'s Scores Compared to others:`, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)' }
+  returnScore(user:User){
+    return this.userService.calculateWins(user);
   }
 }

@@ -1,6 +1,8 @@
 import { APIInfo } from "../api-info";
 
 export interface GameInfo {
-    name:string;
+    isStats:boolean;
+    guest:boolean;
+    id:string;
     info:APIInfo;
 }

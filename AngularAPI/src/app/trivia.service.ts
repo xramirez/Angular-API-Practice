@@ -7,15 +7,15 @@ import { APIInfo } from './api-info';
 })
 export class TriviaService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
 
-  public getTrivia(info:APIInfo) {
-    return new Promise((resolve,reject) => {
+  public getTrivia(info: APIInfo) {
+    return new Promise((resolve, reject) => {
       this.http.get(`https://opentdb.com/api.php?amount=10&category=${info.category}&difficulty=${info.difficulty}&type=${info.choiceType}`).subscribe(
-        (res)=>{
+        (res) => {
           resolve(res);
-        }, (err)=>{
+        }, (err) => {
           reject(err);
         }
       )

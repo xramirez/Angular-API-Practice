@@ -31,7 +31,7 @@ export class GameComponent implements OnInit {
     this.triviaService.getTrivia({ category: this.gameInfo.category, difficulty: this.gameInfo.difficulty, choiceType: this.gameInfo.choiceType })
       .then((resp: any) => {
         this.results = resp.results;
-        console.log(this.results)
+        //console.log(this.results)
         this.createAnswers();
       }).catch(console.log)
   }
@@ -44,7 +44,7 @@ export class GameComponent implements OnInit {
     console.log(this.results[this.activeQuestion].correct_answer)
     for (let answer of this.results[this.activeQuestion].incorrect_answers)
       this.answers.push({ answer: answer, isCorrect: false });
-    console.log(this.answers)
+    //console.log(this.answers)
 
     //the second portion of this function is to jumble up the answers. The min is 4, the max is 2
     if (this.answers.length > 2) {
@@ -68,7 +68,10 @@ export class GameComponent implements OnInit {
     if(this.activeQuestion < 9)
     {
       if(this.selected.isCorrect)
+      {
         this.correctAnswers++;
+        this.selected = {answer: '', isCorrect: false};
+      }
       console.log(`Correct answers: ${this.correctAnswers}`)
       this.activeQuestion++;
       this.createAnswers();

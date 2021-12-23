@@ -1,7 +1,22 @@
-<h1>You got a score of {{finalInfo.score}} out of 10!</h1>
-<h2>Here are your stats, {{finalInfo.name}}:</h2>
-<plotly-plot [data]="gameData" [layout]="gameLayout"></plotly-plot>
-<plotly-plot [data]="allScoresData" [layout]="allScoresLayout"></plotly-plot>
-<plotly-plot [data]="allPlayerData" [layout]="allPlayerLayout"></plotly-plot>
+<h1 *ngIf="!justStats">You got a score of {{finalInfo.score}} out of 10!</h1>
+<h2>Here are your stats, {{finalInfo.id}}:</h2>
+<div *ngIf="!finalInfo.guest">
+    <plotly-plot [data]="gameData" [layout]="gameLayout"></plotly-plot>
+    <plotly-plot [data]="genreData" [layout]="genreLayout"></plotly-plot>
 
-
+</div>
+<div class="container-fluid">
+    <h2>Leaderboard</h2>
+    <div class="leaderboard">
+        <div class="sorters row align-items-start">
+            <div class="col-4">Username</div>
+            <div class="col-4 sort" (click)="leaderboard('win')">Wins</div>
+            <div class="col-4 sort" (click)="leaderboard('perfect')">Perfect Wins</div>
+        </div>
+        <div *ngFor="let user of sortedUsers" class="user-display row align-items-start">
+            <div class="col-4">{{user.id}}</div>
+            <div class="col-4">{{returnScore(user)}}</div>
+            <div class="col-4">{{user.score.perfectWin}}</div>
+        </div>
+    </div>
+</div>
