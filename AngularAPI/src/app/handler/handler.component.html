@@ -9,6 +9,6 @@
     <home *ngIf="setup" (gameOutput)="handleOutput($event)"></home>
     <game *ngIf="game" [gameInfo]="apiInfo" (endInfo)="endGame($event)"></game>
     <stats *ngIf="gameStats" [finalInfo]="finalInfo"></stats>
-    <button *ngIf="!setup" (click)="restartGame()" class="btn btn-danger">Back to Home</button>
+    <button *ngIf="!setup" (click)="restartGame()" class="btn btn-danger back">Back to Home</button>
 
 </div>

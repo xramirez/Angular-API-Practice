@@ -136,22 +136,4 @@ export class UserService {
     return [user.genres.filmWins, user.genres.musicWins, user.genres.tvWins, user.genres.gamingWins]
   }
 
-  // returnScore(name: string, difficulty: string): [number, number] {
-  //   let user = this.getUser(name);
-  //   if (difficulty === 'easy') {
-  //     return [user.score.easyWin, user.score.easyLoss]
-  //   }
-  //   else if (difficulty === 'medium') {
-  //     return [user.score.medWin, user.score.medLoss]
-  //   }
-  //   else if (difficulty === 'hard') {
-  //     return [user.score.hardWin, user.score.hardLoss]
-  //   }
-  //   else if (difficulty === 'perfect') {
-  //     console.log(user.score.perfectWin);
-  //     return [user.score.perfectWin, 0]
-  //   }
-  //   return [0, 0]
-  // }
-
 }

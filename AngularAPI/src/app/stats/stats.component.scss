@@ -1,3 +1,14 @@
+.container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.leaderboard{
+    width: 600px;
+    text-align: center;
+}
+
 .leaderboard div{
     border: 1px solid black;
 }
