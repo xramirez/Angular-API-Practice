@@ -1,8 +1,8 @@
 <h1 *ngIf="!justStats">You got a score of {{finalInfo.score}} out of 10!</h1>
-<h2>Here are your stats, {{finalInfo.id}}:</h2>
-<div *ngIf="!finalInfo.guest">
-    <plotly-plot [data]="gameData" [layout]="gameLayout"></plotly-plot>
-    <plotly-plot [data]="genreData" [layout]="genreLayout"></plotly-plot>
+<h2 *ngIf="!finalInfo.guest">Here are your stats, {{finalInfo.id}}:</h2>
+<div *ngIf="!finalInfo.guest" class="row">
+    <plotly-plot [data]="gameData" [layout]="gameLayout" class="col-6"></plotly-plot>
+    <plotly-plot [data]="genreData" [layout]="genreLayout" class="col-6"></plotly-plot>
 
 </div>
 <div class="container-fluid">

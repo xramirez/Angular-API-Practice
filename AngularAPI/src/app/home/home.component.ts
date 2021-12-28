@@ -74,11 +74,11 @@ export class HomeComponent implements OnInit {
       this.badLogin = true;
   }
 
-  generateUser() {
+  async generateUser() {
     if (this.users.some(item => item.id === this.signUp.id) || this.signUp.id === '' || this.signUp.password === '')
       this.badSignup = true;
     else {
-      this.userService.generateUser(this.signUp.id, this.signUp.password, this.signUp.name === '' ? this.signUp.id : this.signUp.name)
+      await this.userService.generateUser(this.signUp.id, this.signUp.password, this.signUp.name === '' ? this.signUp.id : this.signUp.name)
       this.getUsers();
     }
   }
